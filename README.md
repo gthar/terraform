@@ -10,7 +10,7 @@ managed with `pass`.
 
 ```sh
 pass generate pg.monotremata.xyz/terraform
-psql -u pg.monotremata.xyz
+psql --host pg.monotremata.xyz
 ```
 
 ```sql

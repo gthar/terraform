@@ -16,7 +16,21 @@ variable "caladan-ips" {
 // and ipv6 respectively
 variable "caladan-hostnames" {
   type = set(string)
-  default = ["@"]
+  default = [
+    "@",
+    "filite",
+    "git",
+    "gts",
+    "kb",
+    "keyoxide",
+    "matrix",
+    "mx2",
+    "pleroma",
+    "xmpp",
+    "groups.xmpp",
+    "proxy.xmpp",
+    "upload.xmpp",
+  ]
 }
 
 // These are subdomains for services hosted on the host named `narwhal`.

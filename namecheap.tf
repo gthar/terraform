@@ -18,7 +18,7 @@ variable "hosts" {
 // These are subdomains for services hosted on the host named `caladan`.
 // Both A and AAAA records should be made for them pointing to caladan's ipv4
 // and ipv6 respectively
-variable "caladan-hostnames" {
+variable "caladan-subdomains" {
   type = set(string)
   default = [
     "@",
@@ -42,7 +42,7 @@ variable "caladan-hostnames" {
 // takes care of that.
 // But I set the public A record to caladan's ipv4 just for renewing their
 // letsencrypt certificates. No need to set the AAAA record.
-variable "narwhal-hostnames" {
+variable "narwhal-subdomains" {
   type = set(string)
   default = [
     "authelia",
@@ -79,7 +79,7 @@ variable "narwhal-hostnames" {
 // takes care of that.
 // But I set the public A record to caladan's ipv4 just for renewing their
 // letsencrypt certificates. No need to set the AAAA record.
-variable "sloth-hostnames" {
+variable "sloth-subdomains" {
   type = set(string)
   default = [
     "kodi",
@@ -100,7 +100,7 @@ resource "namecheap_domain_records" "monotremata-xyz" {
   mode   = "MERGE" // maybe eventually move to OVERWRITE
 
   dynamic "record" {
-    for_each = var.caladan-hostnames
+    for_each = var.caladan-subdomains
     content {
       hostname = record.value
       type     = "A"
@@ -109,7 +109,7 @@ resource "namecheap_domain_records" "monotremata-xyz" {
   }
 
   dynamic "record" {
-    for_each = var.narwhal-hostnames
+    for_each = var.narwhal-subdomains
     content {
       hostname = record.value
       type     = "A"
@@ -118,7 +118,7 @@ resource "namecheap_domain_records" "monotremata-xyz" {
   }
 
   dynamic "record" {
-    for_each = var.sloth-hostnames
+    for_each = var.sloth-subdomains
     content {
       hostname = record.value
       type     = "A"
@@ -127,7 +127,7 @@ resource "namecheap_domain_records" "monotremata-xyz" {
   }
 
   dynamic "record" {
-    for_each = var.caladan-hostnames
+    for_each = var.caladan-subdomains
     content {
       hostname = record.value
       type     = "AAAA"

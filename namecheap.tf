@@ -11,6 +11,17 @@ variable "caladan-ips" {
   }
 }
 
+variable "fugu-ips" {
+  type = object({
+    v4 = string
+    v6 = string
+  })
+  default = {
+    v4 = "217.69.5.52"
+    v6 = "2001:19f0:6801:1d34:5400:03ff:fe18:7588"
+  }
+}
+
 // These are subdomains for services hosted on the host named `caladan`.
 // Both A and AAAA records should be made for them pointing to caladan's ipv4
 // and ipv6 respectively
@@ -129,6 +140,50 @@ resource "namecheap_domain_records" "monotremata-xyz" {
       type     = "AAAA"
       address  = var.caladan-ips.v6
     }
+  }
+
+  record {
+    hostname = "mail"
+    type     = "A"
+    address   = var.fugu-ips.v4
+  }
+
+  record {
+    hostname = "mail"
+    type     = "AAAA"
+    address   = var.fugu-ips.v6
+  }
+
+  record {
+    hostname = "@"
+    type     = "MX"
+    address  = "mail.monotremata.xyz"
+    mx_pref  = 0
+  }
+
+  record {
+    hostname = "@"
+    type     = "MX"
+    address  = "mx2.monotremata.xyz"
+    mx_pref  = 5
+  }
+
+  record {
+    hostname = "@"
+    type     = "TXT"
+    address  = "v=spf1 mx -all"
+  }
+
+  record {
+    hostname = "dmarc"
+    type     = "TXT"
+    address  = "v=DMARC1;p=quarantine;pct=100;rua=mailto:postmaster@monotremata.xyz;;"
+  }
+
+  record {
+    hostname = "20201210._domainkey"
+    type     = "TXT"
+    address  = "v=DKIM1;k=rsa;p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC3dRTQXNdRNKjM/hnTIQ9d6h4qr7hDkoo3D8ySrV4tEcOC9cCD5fWiUzc560GuWPW5nm/VCDt6gHTGbkwsU/ULO+mjKJtvhZtEJnO4WqVG9Hr2whypODkGM9FSwh0yaWV96OJd51upsNRD/S5fKDMRcl09aBYe2rsn/877re/M0wIDAQAB;"
   }
 
 }

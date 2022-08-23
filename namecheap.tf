@@ -1,24 +1,17 @@
 // https://registry.terraform.io/providers/namecheap/namecheap/latest/docs
 
-variable "caladan-ips" {
-  type = object({
-    v4 = string
-    v6 = string
-  })
+variable "hosts" {
   default = {
-    v4 = "139.162.137.29"
-    v6 = "2a01:7e01::f03c:92ff:fea2:5d7c"
-  }
-}
-
-variable "fugu-ips" {
-  type = object({
-    v4 = string
-    v6 = string
-  })
-  default = {
-    v4 = "217.69.5.52"
-    v6 = "2001:19f0:6801:1d34:5400:03ff:fe18:7588"
+    // Alpine VPS hosted on Linode
+    caladan = {
+      v4 = "139.162.137.29"
+      v6 = "2a01:7e01::f03c:92ff:fea2:5d7c"
+    }
+    // OpenBSD VPS hosted on Vultr
+    fugu = {
+      v4 = "217.69.5.52"
+      v6 = "2001:19f0:6801:1d34:5400:03ff:fe18:7588"
+    }
   }
 }
 
@@ -98,7 +91,7 @@ variable "sloth-hostnames" {
 provider "namecheap" {
   user_name   = "gthar"
   api_user    = "gthar"
-  client_ip   = var.caladan-ips.v4
+  client_ip   = var.hosts.caladan.v4
   use_sandbox = false
 }
 
@@ -111,7 +104,7 @@ resource "namecheap_domain_records" "monotremata-xyz" {
     content {
       hostname = record.value
       type     = "A"
-      address  = var.caladan-ips.v4
+      address  = var.hosts.caladan.v4
     }
   }
 
@@ -120,7 +113,7 @@ resource "namecheap_domain_records" "monotremata-xyz" {
     content {
       hostname = record.value
       type     = "A"
-      address  = var.caladan-ips.v4
+      address  = var.hosts.caladan.v4
     }
   }
 
@@ -129,7 +122,7 @@ resource "namecheap_domain_records" "monotremata-xyz" {
     content {
       hostname = record.value
       type     = "A"
-      address  = var.caladan-ips.v4
+      address  = var.hosts.caladan.v4
     }
   }
 
@@ -138,20 +131,20 @@ resource "namecheap_domain_records" "monotremata-xyz" {
     content {
       hostname = record.value
       type     = "AAAA"
-      address  = var.caladan-ips.v6
+      address  = var.hosts.caladan.v6
     }
   }
 
   record {
     hostname = "mail"
     type     = "A"
-    address   = var.fugu-ips.v4
+    address  = var.hosts.fugu.v4
   }
 
   record {
     hostname = "mail"
     type     = "AAAA"
-    address   = var.fugu-ips.v6
+    address  = var.hosts.fugu.v6
   }
 
   record {

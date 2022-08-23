@@ -19,6 +19,16 @@ variable "caladan-hostnames" {
   default = ["@"]
 }
 
+// These are subdomains for services hosted on the host named `narwhal`.
+// They are only accessible from my internal network and my internal DNS server
+// takes care of that.
+// But I set the public A record to caladan's ipv4 just for renewing their
+// letsencrypt certificates. No need to set the AAAA record.
+variable "narwhal-hostnames" {
+  type = set(string)
+  default = ["authelia"]
+}
+
 provider "namecheap" {
   user_name = "gthar"
   api_user = "gthar"
@@ -32,6 +42,15 @@ resource "namecheap_domain_records" "monotremata-xyz" {
 
   dynamic "record" {
     for_each = var.caladan-hostnames
+    content {
+      hostname = record.value
+      type = "A"
+      address = var.caladan-ips.v4
+    }
+  }
+
+  dynamic "record" {
+    for_each = var.narwhal-hostnames
     content {
       hostname = record.value
       type = "A"

@@ -1,4 +1,40 @@
+// Important:
+// Due to API restrictions, SRV and Dynamic DNS Records can't be created with
+// terraform, so I need to use `MERGE` mode and set those manually on the
+// namecheap web UI
 // https://registry.terraform.io/providers/namecheap/namecheap/latest/docs
+//
+// - SRV Record:
+//     service: _matrix
+//     protocol: _tcp
+//     priority: 0
+//     weight: 10
+//     port: 443
+//     target: matrix.monotremata.xyz
+//     TTL: 30 min
+//
+// - SRV Record:
+//     service: _xmpp-client
+//     protocol: _tcp
+//     priority: 5
+//     weight: 0
+//     port: 5222
+//     target: xmpp.monotremata.xyz
+//     TTL: 30 min
+//
+// - SRV Record:
+//     service: _xmpp-server
+//     protocol: _tcp
+//     priority: 5
+//     weight: 0
+//     port: 5269
+//     target: xmpp.monotremata.xyz
+//     TTL: 30 min
+//
+// - A + Dynamic DNS Record:
+//     host: wg
+
+
 
 variable "hosts" {
   default = {
@@ -97,7 +133,7 @@ provider "namecheap" {
 
 resource "namecheap_domain_records" "monotremata-xyz" {
   domain = "monotremata.xyz"
-  mode   = "MERGE" // maybe eventually move to OVERWRITE
+  mode   = "MERGE"
 
   dynamic "record" {
     for_each = var.caladan-subdomains

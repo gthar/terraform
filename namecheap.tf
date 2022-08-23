@@ -40,26 +40,53 @@ variable "caladan-hostnames" {
 // letsencrypt certificates. No need to set the AAAA record.
 variable "narwhal-hostnames" {
   type = set(string)
-  default = ["authelia"]
+  default = [
+    "authelia",
+    "calibre",
+    "dav",
+    "esphome",
+    "git.narwhal",
+    "gotify",
+    "grafana",
+    "hass",
+    "homer",
+    "influxdb",
+    "jellyfin",
+    "kodi",
+    "mirrors",
+    "mpd",
+    "music",
+    "nextcloud",
+    "nodered",
+    "openbooks",
+    "pg",
+    "rainloop",
+    "registry",
+    "rss-bridge",
+    "syncthing",
+    "transmission",
+    "wallabag",
+    "woodpecker",
+  ]
 }
 
 provider "namecheap" {
-  user_name = "gthar"
-  api_user = "gthar"
-  client_ip = var.caladan-ips.v4
+  user_name   = "gthar"
+  api_user    = "gthar"
+  client_ip   = var.caladan-ips.v4
   use_sandbox = false
 }
 
 resource "namecheap_domain_records" "monotremata-xyz" {
   domain = "monotremata.xyz"
-  mode = "MERGE"  // maybe eventually move to OVERWRITE
+  mode   = "MERGE" // maybe eventually move to OVERWRITE
 
   dynamic "record" {
     for_each = var.caladan-hostnames
     content {
       hostname = record.value
-      type = "A"
-      address = var.caladan-ips.v4
+      type     = "A"
+      address  = var.caladan-ips.v4
     }
   }
 
@@ -67,8 +94,8 @@ resource "namecheap_domain_records" "monotremata-xyz" {
     for_each = var.narwhal-hostnames
     content {
       hostname = record.value
-      type = "A"
-      address = var.caladan-ips.v4
+      type     = "A"
+      address  = var.caladan-ips.v4
     }
   }
 
@@ -76,8 +103,8 @@ resource "namecheap_domain_records" "monotremata-xyz" {
     for_each = var.caladan-hostnames
     content {
       hostname = record.value
-      type = "AAAA"
-      address = var.caladan-ips.v6
+      type     = "AAAA"
+      address  = var.caladan-ips.v6
     }
   }
 

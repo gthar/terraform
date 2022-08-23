@@ -175,7 +175,7 @@ resource "namecheap_domain_records" "monotremata-xyz" {
   }
 
   record {
-    hostname = "dmarc"
+    hostname = "_dmarc"
     type     = "TXT"
     address  = "v=DMARC1;p=quarantine;pct=100;rua=mailto:postmaster@monotremata.xyz;;"
   }

@@ -2,6 +2,12 @@ platform: linux/arm64
 
 pipeline:
 
+  # gitleaks:
+  #   image: registry.monotremata.xyz/gitleaks
+  #   pull: true
+  #   commands:
+  #     - gitleaks --source . --verbose --redact detect
+
   init:
     image: registry.monotremata.xyz/terraform
     pull: true
@@ -21,11 +27,15 @@ pipeline:
       - HTTPS_PROXY=caladan:8888
     secrets: [namecheap_api_key]
 
-  # gitleaks:
-  #   image: registry.monotremata.xyz/gitleaks
-  #   pull: true
-  #   commands:
-  #     - gitleaks --source . --verbose --redact detect
+  apply:
+    image: registry.monotremata.xyz/terraform
+    pull: true
+    commands:
+      - terraform apply tfplan
+    environment:
+      - HTTP_PROXY=caladan:8888
+      - HTTPS_PROXY=caladan:8888
+    secrets: [namecheap_api_key]
 
   notify:
     image: registry.monotremata.xyz/xmpp-ci

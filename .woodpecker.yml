@@ -10,6 +10,14 @@ pipeline:
     secrets:
       [backend_conn_str]
 
+  plan:
+    image: registry.monotremata.xyz/terraform
+    pull: true
+    commands:
+      - terraform plan -out=tfplan
+      - terraform show -json tfplan
+    secrets: [namecheap_api_key]
+
   # gitleaks:
   #   image: registry.monotremata.xyz/gitleaks
   #   pull: true

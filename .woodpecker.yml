@@ -2,11 +2,11 @@ platform: linux/arm64
 
 pipeline:
 
-  gitleaks:
-    image: registry.monotremata.xyz/gitleaks
-    pull: true
-    commands:
-      - gitleaks --source . --verbose --redact detect
+  # gitleaks:
+  #   image: registry.monotremata.xyz/gitleaks
+  #   pull: true
+  #   commands:
+  #     - gitleaks --source . --verbose --redact detect
 
   notify:
     image: registry.monotremata.xyz/xmpp-ci

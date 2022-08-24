@@ -132,8 +132,9 @@ provider "namecheap" {
 }
 
 resource "namecheap_domain_records" "monotremata-xyz" {
-  domain = "monotremata.xyz"
-  mode   = "MERGE"
+  domain     = "monotremata.xyz"
+  mode       = "MERGE"
+  email_type = "MX"
 
   dynamic "record" {
     for_each = var.caladan-subdomains

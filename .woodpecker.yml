@@ -16,6 +16,9 @@ pipeline:
     commands:
       - terraform plan -out=tfplan
       - terraform show -json tfplan
+    environment:
+      - HTTP_PROXY=caladan:8888
+      - HTTPS_PROXY=caladan:8888
     secrets: [namecheap_api_key]
 
   # gitleaks:

@@ -33,6 +33,9 @@
 //
 // - A + Dynamic DNS Record:
 //     host: wg
+//
+//  I also enable DNSSEC from the web UI, because I can't do that with
+//  terraform...
 
 
 

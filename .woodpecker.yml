@@ -2,6 +2,14 @@ platform: linux/arm64
 
 pipeline:
 
+  init:
+    image: registry.monotremata.xyz/terraform
+    pull: true
+    commands:
+      - terraform init -backend-config="conn_str=$BACKEND_CONN_STR"
+    secrets:
+      [backend_conn_str]
+
   # gitleaks:
   #   image: registry.monotremata.xyz/gitleaks
   #   pull: true

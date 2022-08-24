@@ -1,0 +1,20 @@
+platform: linux/arm64
+
+pipeline:
+
+  gitleaks:
+    image: registry.monotremata.xyz/gitleaks
+    pull: true
+    commands:
+      - gitleaks --source . --verbose --redact detect
+
+  notify:
+    image: registry.monotremata.xyz/xmpp-ci
+    pull: true
+    settings:
+      username: "woodpecker@monotremata.xyz"
+      recipient: "rilla@monotremata.xyz"
+      password:
+        from_secret: xmpp_password
+    when:
+      status: [success, failure]

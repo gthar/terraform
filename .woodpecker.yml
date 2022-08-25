@@ -28,6 +28,7 @@ pipeline:
     secrets:
       - linode_token
       - namecheap_api_key
+      - vultr_api_key
 
   apply:
     image: registry.monotremata.xyz/terraform

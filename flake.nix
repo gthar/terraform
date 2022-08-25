@@ -8,7 +8,8 @@
       let pkgs = nixpkgs.legacyPackages.${system};
       in {
         devShell = pkgs.mkShell {
-          nativeBuildInputs = [ pkgs.bashInteractive pkgs.terraform ];
+          nativeBuildInputs =
+            [ pkgs.bashInteractive pkgs.terraform pkgs.linode-cli ];
           buildInputs = [ ];
         };
       });

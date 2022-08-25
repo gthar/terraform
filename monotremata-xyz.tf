@@ -127,13 +127,6 @@ variable "sloth-subdomains" {
   ]
 }
 
-provider "namecheap" {
-  user_name   = "gthar"
-  api_user    = "gthar"
-  client_ip   = var.hosts.caladan.v4
-  use_sandbox = false
-}
-
 resource "namecheap_domain_records" "monotremata-xyz" {
   domain     = "monotremata.xyz"
   mode       = "MERGE"

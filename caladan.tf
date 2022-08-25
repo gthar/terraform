@@ -1,6 +1,3 @@
-provider "linode" {
-}
-
 # https://www.linode.com/docs/guides/import-existing-infrastructure-to-terraform/
 resource "linode_instance" "caladan-vm" {
   label  = "caladan"

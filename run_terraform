@@ -1,12 +1,14 @@
 #!/bin/sh
 
+NAMECHEAP_API_KEY=$(pass namecheap.com/api_key)
+LINODE_TOKEN=$(pass linode.com/token)
+VULTR_API_KEY=$(pass vultr.com/api_key)
+
 export HTTP_PROXY=caladan:8888
 export HTTPS_PROXY=caladan:8888
 
-NAMECHEAP_API_KEY=$(pass namecheap.com/api_key)
 export NAMECHEAP_API_KEY
-
-LINODE_TOKEN=$(pass linode.com/token)
 export LINODE_TOKEN
+export VULTR_API_KEY
 
 terraform "$@"

@@ -27,13 +27,14 @@ create resources manually and import them later to terraform.
 
 ## Wrapper scripts
 
-I run Terrafrom through two wrapper scripts: `init.sh` and `run_terraform`.
+I run Terrafrom through two wrapper scripts: `scripts/init.sh` and
+`scripts/run_terraform`.
 
-`init.sh` is used just to run `terraform init`. It fetches the PostgreSQL
-phssword (from `pass`) and it passes the connection string manually to the
-partially-configured pg backend.
+`scripts/init.sh` is used just to run `terraform init`. It fetches the
+PostgreSQL phssword (from `pass`) and it passes the connection string manually
+to the partially-configured pg backend.
 
-`run_terraform` is used to run other terraform commands. It sets up the
+`scripts/run_terraform` is used to run other terraform commands. It sets up the
 `HTTP_PROXY` and `HTTPS_PROXY` variables to use `caladan` as a proxy. It also
 fetches the secrets (from `pass`) and exports the variables for api keys and
 tokens needed by the different providers.

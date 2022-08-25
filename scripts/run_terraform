@@ -11,4 +11,4 @@ export NAMECHEAP_API_KEY
 export LINODE_TOKEN
 export VULTR_API_KEY
 
-terraform "$@"
+terraform -chdir=./tf "$@"

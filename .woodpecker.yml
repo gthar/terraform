@@ -38,7 +38,10 @@ pipeline:
     environment:
       - HTTP_PROXY=caladan:8888
       - HTTPS_PROXY=caladan:8888
-    secrets: [namecheap_api_key]
+    secrets:
+      - linode_token
+      - namecheap_api_key
+      - vultr_api_key
 
   notify:
     image: registry.monotremata.xyz/xmpp-ci

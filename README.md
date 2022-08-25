@@ -31,7 +31,7 @@ I run Terrafrom through two wrapper scripts: `scripts/init.sh` and
 `scripts/run_terraform`.
 
 `scripts/init.sh` is used just to run `terraform init`. It fetches the
-PostgreSQL phssword (from `pass`) and it passes the connection string manually
+PostgreSQL password (from `pass`) and it passes the connection string manually
 to the partially-configured pg backend.
 
 `scripts/run_terraform` is used to run other terraform commands. It sets up the

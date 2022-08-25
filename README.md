@@ -39,6 +39,8 @@ to the partially-configured pg backend.
 fetches the secrets (from `pass`) and exports the variables for api keys and
 tokens needed by the different providers.
 
+Additionally, I also wrote a simple `Makefile` to init/plan/apply quickly.
+
 ## Backend
 
 I use the pg backend on a PostgreSQL hosted on my NAS.

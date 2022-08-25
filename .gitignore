@@ -1,3 +1,5 @@
 .direnv
 .terraform
 .terraform.lock.hcl
+tfinit
+tfplan

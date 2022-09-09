@@ -103,6 +103,7 @@ variable "narwhal-subdomains" {
     "nodered",
     "openbooks",
     "pg",
+    "pgadmin",
     "rainloop",
     "registry",
     "rss-bridge",

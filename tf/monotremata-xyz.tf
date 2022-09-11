@@ -61,7 +61,6 @@ variable "caladan-subdomains" {
   type = set(string)
   default = [
     "@",
-    "filite",
     "git",
     "gts",
     "kb",
@@ -69,10 +68,11 @@ variable "caladan-subdomains" {
     "matrix",
     "mx2",
     "pleroma",
+    "pg.caladan",
     "xmpp",
-    "groups.xmpp",
     "proxy.xmpp",
     "upload.xmpp",
+    "groups.xmpp",
   ]
 }
 

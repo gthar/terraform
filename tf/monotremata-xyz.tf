@@ -1,216 +1,246 @@
-// Important:
-// Due to API restrictions, SRV and Dynamic DNS Records can't be created with
-// terraform, so I need to use `MERGE` mode and set those manually on the
-// namecheap web UI
-// https://registry.terraform.io/providers/namecheap/namecheap/latest/docs
-//
-// - SRV Record:
-//     service: _matrix
-//     protocol: _tcp
-//     priority: 0
-//     weight: 10
-//     port: 443
-//     target: matrix.monotremata.xyz
-//     TTL: 30 min
-//
-// - SRV Record:
-//     service: _xmpp-client
-//     protocol: _tcp
-//     priority: 5
-//     weight: 0
-//     port: 5222
-//     target: xmpp.monotremata.xyz
-//     TTL: 30 min
-//
-// - SRV Record:
-//     service: _xmpp-server
-//     protocol: _tcp
-//     priority: 5
-//     weight: 0
-//     port: 5269
-//     target: xmpp.monotremata.xyz
-//     TTL: 30 min
-//
-// - A + Dynamic DNS Record:
-//     host: wg
-//
-//  I also enable DNSSEC from the web UI, because I can't do that with
-//  terraform...
+# todo:
+# I am also creating the subdomain `wg.monotremata.xyz` manually
+# I decided to manage that subdomain outside of terraform because it has a
+# dynamic IP that I update with a cron job
 
+locals {
+  domain = "monotremata.xyz"
 
-
-variable "hosts" {
-  default = {
-    // Alpine VPS hosted on Linode
-    caladan = {
-      v4 = "139.162.137.29"
-      v6 = "2a01:7e01::f03c:92ff:fea2:5d7c"
-    }
-    // OpenBSD VPS hosted on Vultr
-    fugu = {
-      v4 = "217.69.5.52"
-      v6 = "2001:19f0:6801:1d34:5400:03ff:fe18:7588"
-    }
+  // Alpine VPS hosted on Linode
+  caladan = {
+    ipv4 = "139.162.137.29"
+    ipv6 = "2a01:7e01::f03c:92ff:fea2:5d7c"
+    // These are subdomains for services hosted on the host named `caladan`.
+    // Both A and AAAA records should be made for them pointing to caladan's ipv4
+    // and ipv6 respectively
+    domains = toset([
+      local.domain,
+      "git",
+      "gts",
+      "kb",
+      "keyoxide",
+      "matrix",
+      "mx2",
+      "pleroma",
+      "pg.caladan",
+      "xmpp",
+      "proxy.xmpp",
+      "upload.xmpp",
+      "groups.xmpp",
+    ])
   }
+
+  // OpenBSD VPS hosted on Vultr
+  fugu = {
+    ipv4 = "217.69.5.52"
+    ipv6 = "2001:19f0:6801:1d34:5400:03ff:fe18:7588"
+  }
+
+  // ODROID-HC4 serving as a NAS
+  narwhal = {
+    // These are subdomains for services hosted on the host named `narwhal`.
+    // They are only accessible from my internal network and my internal DNS server
+    // takes care of that.
+    // But I set the public A record to caladan's ipv4 just for renewing their
+    // letsencrypt certificates. No need to set the AAAA record.
+    domains = toset([
+      "authelia",
+      "calibre",
+      "dav",
+      "esphome",
+      "git.narwhal",
+      "gotify",
+      "grafana",
+      "hass",
+      "homer",
+      "influxdb",
+      "jellyfin",
+      "kodi",
+      "mirrors",
+      "mpd",
+      "music",
+      "nextcloud",
+      "nodered",
+      "openbooks",
+      "pg",
+      "pgadmin",
+      "rainloop",
+      "registry",
+      "rss-bridge",
+      "syncthing",
+      "transmission",
+      "wallabag",
+      "woodpecker",
+    ])
+  }
+
+  // Raspberry Pi 4 serving as a media center
+  sloth = {
+    // These are subdomains for services hosted on the host named `sloth`.
+    // They are only accessible from my internal network and my internal DNS server
+    // takes care of that.
+    // But I set the public A record to caladan's ipv4 just for renewing their
+    // letsencrypt certificates. No need to set the AAAA record.
+    domains = toset([
+      "kodi",
+      "mympd",
+      "snapweb",
+    ])
+  }
+
+  dkim_pub_key = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC3dRTQXNdRNKjM/hnTIQ9d6h4qr7hDkoo3D8ySrV4tEcOC9cCD5fWiUzc560GuWPW5nm/VCDt6gHTGbkwsU/ULO+mjKJtvhZtEJnO4WqVG9Hr2whypODkGM9FSwh0yaWV96OJd51upsNRD/S5fKDMRcl09aBYe2rsn/877re/M0wIDAQAB"
+
 }
 
-// These are subdomains for services hosted on the host named `caladan`.
-// Both A and AAAA records should be made for them pointing to caladan's ipv4
-// and ipv6 respectively
-variable "caladan-subdomains" {
-  type = set(string)
-  default = [
-    "@",
-    "git",
-    "gts",
-    "kb",
-    "keyoxide",
-    "matrix",
-    "mx2",
-    "pleroma",
-    "pg.caladan",
-    "xmpp",
-    "proxy.xmpp",
-    "upload.xmpp",
-    "groups.xmpp",
+resource "namecheap_domain_records" "namecheap-monotremata-xyz" {
+  domain = "monotremata.xyz"
+  mode   = "OVERWRITE"
+  nameservers = [
+    "ns1.linode.com",
+    "ns2.linode.com",
+    "ns3.linode.com",
+    "ns4.linode.com",
+    "ns5.linode.com"
   ]
 }
 
-// These are subdomains for services hosted on the host named `narwhal`.
-// They are only accessible from my internal network and my internal DNS server
-// takes care of that.
-// But I set the public A record to caladan's ipv4 just for renewing their
-// letsencrypt certificates. No need to set the AAAA record.
-variable "narwhal-subdomains" {
-  type = set(string)
-  default = [
-    "authelia",
-    "calibre",
-    "dav",
-    "esphome",
-    "git.narwhal",
-    "gotify",
-    "grafana",
-    "hass",
-    "homer",
-    "influxdb",
-    "jellyfin",
-    "kodi",
-    "mirrors",
-    "mpd",
-    "music",
-    "nextcloud",
-    "nodered",
-    "openbooks",
-    "pg",
-    "pgadmin",
-    "rainloop",
-    "registry",
-    "rss-bridge",
-    "syncthing",
-    "transmission",
-    "wallabag",
-    "woodpecker",
-  ]
+resource "linode_domain" "monotremata_xyz" {
+  type      = "master"
+  domain    = local.domain
+  soa_email = format("admin@%s", local.domain)
 }
 
-// These are subdomains for services hosted on the host named `sloth`.
-// They are only accessible from my internal network and my internal DNS server
-// takes care of that.
-// But I set the public A record to caladan's ipv4 just for renewing their
-// letsencrypt certificates. No need to set the AAAA record.
-variable "sloth-subdomains" {
-  type = set(string)
-  default = [
-    "kodi",
-    "mympd",
-    "snapweb",
-  ]
+resource "linode_domain_record" "caladan_a" {
+  domain_id   = linode_domain.monotremata_xyz.id
+  name        = each.key
+  record_type = "A"
+  target      = local.caladan.ipv4
+  for_each    = local.caladan.domains
 }
 
-resource "namecheap_domain_records" "monotremata-xyz" {
-  domain     = "monotremata.xyz"
-  mode       = "MERGE"
-  email_type = "MX"
+resource "linode_domain_record" "caladan_aaaa" {
+  domain_id   = linode_domain.monotremata_xyz.id
+  name        = each.key
+  record_type = "AAAA"
+  target      = local.caladan.ipv6
+  for_each    = local.caladan.domains
+}
 
-  dynamic "record" {
-    for_each = var.caladan-subdomains
-    content {
-      hostname = record.value
-      type     = "A"
-      address  = var.hosts.caladan.v4
+resource "linode_domain_record" "narwhal_a" {
+  domain_id   = linode_domain.monotremata_xyz.id
+  name        = each.key
+  record_type = "A"
+  target      = local.caladan.ipv4
+  for_each    = local.narwhal.domains
+}
+
+resource "linode_domain_record" "sloth_a" {
+  domain_id   = linode_domain.monotremata_xyz.id
+  name        = each.key
+  record_type = "A"
+  target      = local.caladan.ipv4
+  for_each    = local.sloth.domains
+}
+
+resource "linode_domain_record" "mx" {
+  domain_id   = linode_domain.monotremata_xyz.id
+  name        = each.value.name
+  target      = each.value.target
+  record_type = each.key
+  priority    = each.value.priority
+  for_each = {
+    A = {
+      name     = "mail"
+      target   = local.fugu.ipv4
+      priority = null
+    }
+    AAAA = {
+      name     = "mail"
+      target   = local.fugu.ipv6
+      priority = null
+    }
+    MX = {
+      name     = local.domain,
+      target   = format("mail.%s", local.domain)
+      priority = 0
     }
   }
+}
 
-  dynamic "record" {
-    for_each = var.narwhal-subdomains
-    content {
-      hostname = record.value
-      type     = "A"
-      address  = var.hosts.caladan.v4
+resource "linode_domain_record" "mx2" {
+  domain_id   = linode_domain.monotremata_xyz.id
+  name        = each.value.name
+  target      = each.value.target
+  record_type = each.key
+  priority    = each.value.priority
+  for_each = {
+    A = {
+      name     = "mx2"
+      target   = local.caladan.ipv4
+      priority = null
+    }
+    AAAA = {
+      name     = "mx2"
+      target   = local.caladan.ipv6
+      priority = null
+    }
+    MX = {
+      name     = local.domain
+      target   = format("mx2.%s", local.domain)
+      priority = 5
     }
   }
+}
 
-  dynamic "record" {
-    for_each = var.sloth-subdomains
-    content {
-      hostname = record.value
-      type     = "A"
-      address  = var.hosts.caladan.v4
+resource "linode_domain_record" "mail_txt" {
+  domain_id   = linode_domain.monotremata_xyz.id
+  record_type = "TXT"
+  name        = each.value.name
+  target      = each.value.target
+  for_each = {
+    spf = {
+      name   = local.domain
+      target = "v=spf1 mx -all"
+    }
+    dmarc = {
+      name   = "_dmarc"
+      target = format("v=DMARC1;p=quarantine;pct=100;rua=mailto:postmaster@%s;;", local.domain)
+    }
+    dkim = {
+      name   = "20201210._domainkey"
+      target = format("v=DKIM1;k=rsa;p=%s;", local.dkim_pub_key)
     }
   }
+}
 
-  dynamic "record" {
-    for_each = var.caladan-subdomains
-    content {
-      hostname = record.value
-      type     = "AAAA"
-      address  = var.hosts.caladan.v6
+resource "linode_domain_record" "matrix_srv" {
+  domain_id   = linode_domain.monotremata_xyz.id
+  record_type = "SRV"
+  service     = "matrix"
+  protocol    = "tcp"
+  priority    = 0
+  weight      = 10
+  port        = 443
+  target      = format("matrix.%s", local.domain)
+  ttl_sec     = 1800 // 30 min
+}
+
+resource "linode_domain_record" "xmpp_srv" {
+  domain_id   = linode_domain.monotremata_xyz.id
+  record_type = "SRV"
+  service     = each.key
+  protocol    = "tcp"
+  port        = each.value.port
+  priority    = 5
+  weight      = 0
+  target      = format("xmpp.%s", local.domain)
+  ttl_sec     = 1800 // 30 min
+  for_each = {
+    xmpp-client = {
+      port = 5222
+    }
+    xmpp-server = {
+      port = 5269
     }
   }
-
-  record {
-    hostname = "mail"
-    type     = "A"
-    address  = var.hosts.fugu.v4
-  }
-
-  record {
-    hostname = "mail"
-    type     = "AAAA"
-    address  = var.hosts.fugu.v6
-  }
-
-  record {
-    hostname = "@"
-    type     = "MX"
-    address  = "mail.monotremata.xyz"
-    mx_pref  = 0
-  }
-
-  record {
-    hostname = "@"
-    type     = "MX"
-    address  = "mx2.monotremata.xyz"
-    mx_pref  = 5
-  }
-
-  record {
-    hostname = "@"
-    type     = "TXT"
-    address  = "v=spf1 mx -all"
-  }
-
-  record {
-    hostname = "_dmarc"
-    type     = "TXT"
-    address  = "v=DMARC1;p=quarantine;pct=100;rua=mailto:postmaster@monotremata.xyz;;"
-  }
-
-  record {
-    hostname = "20201210._domainkey"
-    type     = "TXT"
-    address  = "v=DKIM1;k=rsa;p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC3dRTQXNdRNKjM/hnTIQ9d6h4qr7hDkoo3D8ySrV4tEcOC9cCD5fWiUzc560GuWPW5nm/VCDt6gHTGbkwsU/ULO+mjKJtvhZtEJnO4WqVG9Hr2whypODkGM9FSwh0yaWV96OJd51upsNRD/S5fKDMRcl09aBYe2rsn/877re/M0wIDAQAB;"
-  }
-
 }

@@ -36,58 +36,6 @@ locals {
     ipv6 = "2001:19f0:6801:1d34:5400:03ff:fe18:7588"
   }
 
-  // ODROID-HC4 serving as a NAS
-  narwhal = {
-    // These are subdomains for services hosted on the host named `narwhal`.
-    // They are only accessible from my internal network and my internal DNS server
-    // takes care of that.
-    // But I set the public A record to caladan's ipv4 just for renewing their
-    // letsencrypt certificates. No need to set the AAAA record.
-    domains = toset([
-      "authelia",
-      "calibre",
-      "dav",
-      "esphome",
-      "git.narwhal",
-      "gotify",
-      "grafana",
-      "hass",
-      "homer",
-      "influxdb",
-      "jellyfin",
-      "kodi",
-      "mirrors",
-      "mpd",
-      "music",
-      "nextcloud",
-      "nodered",
-      "openbooks",
-      "pg",
-      "pgadmin",
-      "rainloop",
-      "registry",
-      "rss-bridge",
-      "syncthing",
-      "transmission",
-      "wallabag",
-      "woodpecker",
-    ])
-  }
-
-  // Raspberry Pi 4 serving as a media center
-  sloth = {
-    // These are subdomains for services hosted on the host named `sloth`.
-    // They are only accessible from my internal network and my internal DNS server
-    // takes care of that.
-    // But I set the public A record to caladan's ipv4 just for renewing their
-    // letsencrypt certificates. No need to set the AAAA record.
-    domains = toset([
-      "kodi",
-      "mympd",
-      "snapweb",
-    ])
-  }
-
   dkim_pub_key = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC3dRTQXNdRNKjM/hnTIQ9d6h4qr7hDkoo3D8ySrV4tEcOC9cCD5fWiUzc560GuWPW5nm/VCDt6gHTGbkwsU/ULO+mjKJtvhZtEJnO4WqVG9Hr2whypODkGM9FSwh0yaWV96OJd51upsNRD/S5fKDMRcl09aBYe2rsn/877re/M0wIDAQAB"
 
 }
@@ -124,22 +72,6 @@ resource "linode_domain_record" "caladan_aaaa" {
   record_type = "AAAA"
   target      = local.caladan.ipv6
   for_each    = local.caladan.domains
-}
-
-resource "linode_domain_record" "narwhal_a" {
-  domain_id   = linode_domain.monotremata_xyz.id
-  name        = each.key
-  record_type = "A"
-  target      = local.caladan.ipv4
-  for_each    = local.narwhal.domains
-}
-
-resource "linode_domain_record" "sloth_a" {
-  domain_id   = linode_domain.monotremata_xyz.id
-  name        = each.key
-  record_type = "A"
-  target      = local.caladan.ipv4
-  for_each    = local.sloth.domains
 }
 
 resource "linode_domain_record" "mx" {

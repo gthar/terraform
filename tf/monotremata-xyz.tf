@@ -20,7 +20,6 @@ locals {
       "kb",
       "keyoxide",
       "matrix",
-      "mx2",
       "pleroma",
       "pg.caladan",
       "xmpp",

@@ -12,7 +12,7 @@ pipeline:
     image: registry.monotremata.xyz/terraform
     pull: true
     commands:
-      - terraform -chdir=tf init -backend-config="conn_str=$BACKEND_CONN_STR"
+      - terraform init -backend-config="conn_str=$BACKEND_CONN_STR"
     secrets:
       [backend_conn_str]
 
@@ -20,8 +20,8 @@ pipeline:
     image: registry.monotremata.xyz/terraform
     pull: true
     commands:
-      - terraform -chdir=tf plan -out=tfplan
-      - terraform -chdir=tf show -json tfplan
+      - terraform plan -out=tfplan
+      - terraform show -json tfplan
     environment:
       - HTTP_PROXY=caladan:8888
       - HTTPS_PROXY=caladan:8888
@@ -34,7 +34,7 @@ pipeline:
     image: registry.monotremata.xyz/terraform
     pull: true
     commands:
-      - terraform -chdir=tf apply tfplan
+      - terraform apply tfplan
     environment:
       - HTTP_PROXY=caladan:8888
       - HTTPS_PROXY=caladan:8888

@@ -9,7 +9,7 @@
       in {
         devShell = pkgs.mkShell {
           nativeBuildInputs =
-            [ pkgs.bashInteractive pkgs.terraform pkgs.linode-cli ];
+            [ pkgs.bashInteractive pkgs.terraform pkgs.linode-cli pkgs.just ];
           buildInputs = [ ];
         };
       });

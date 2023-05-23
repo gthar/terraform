@@ -28,3 +28,11 @@ resource "linode_instance" "caladan-vm" {
     size  = 512
   }
 }
+
+resource "linode_volume" "caladan-data" {
+  label     = "caladan-data"
+  linode_id = linode_instance.caladan-vm.id
+  region    = "eu-central"
+  size      = 20
+  tags      = []
+}

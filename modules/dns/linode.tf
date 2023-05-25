@@ -9,12 +9,24 @@ resource "linode_domain" "monotremata_xyz" {
   soa_email = format("admin@%s", var.domain)
 }
 
+resource "linode_domain_record" "caladan_a_root" {
+  domain_id   = linode_domain.monotremata_xyz.id
+  record_type = "A"
+  target      = var.caladan.ipv4
+}
+
 resource "linode_domain_record" "caladan_a" {
   domain_id   = linode_domain.monotremata_xyz.id
   name        = each.key
   record_type = "A"
   target      = var.caladan.ipv4
   for_each    = var.caladan.domains
+}
+
+resource "linode_domain_record" "caladan_aaaa_root" {
+  domain_id   = linode_domain.monotremata_xyz.id
+  record_type = "AAAA"
+  target      = var.caladan.ipv6
 }
 
 resource "linode_domain_record" "caladan_aaaa" {
@@ -43,7 +55,7 @@ resource "linode_domain_record" "mx" {
       priority = null
     }
     MX = {
-      name     = var.domain,
+      name     = null
       target   = format("mail.%s", var.domain)
       priority = 0
     }
@@ -68,7 +80,7 @@ resource "linode_domain_record" "mx2" {
       priority = null
     }
     MX = {
-      name     = var.domain
+      name     = null
       target   = format("mx2.%s", var.domain)
       priority = 5
     }
@@ -82,7 +94,7 @@ resource "linode_domain_record" "mail_txt" {
   target      = each.value.target
   for_each = {
     spf = {
-      name   = var.domain
+      name   = null
       target = "v=spf1 mx -all"
     }
     dmarc = {

@@ -3,6 +3,14 @@ resource "hetznerdns_zone" "monotremata_xyz" {
   ttl  = 86400
 }
 
+resource "hetznerdns_record" "caladan_a_root" {
+  zone_id = hetznerdns_zone.monotremata_xyz.id
+  name    = "@"
+  value   = var.caladan.ipv4
+  type    = "A"
+  ttl     = 86400
+}
+
 resource "hetznerdns_record" "caladan_a" {
   zone_id  = hetznerdns_zone.monotremata_xyz.id
   name     = each.key
@@ -10,6 +18,14 @@ resource "hetznerdns_record" "caladan_a" {
   type     = "A"
   ttl      = 86400
   for_each = var.caladan.domains
+}
+
+resource "hetznerdns_record" "caladan_aAAA_root" {
+  zone_id = hetznerdns_zone.monotremata_xyz.id
+  name    = "@"
+  value   = var.caladan.ipv6
+  type    = "AAAA"
+  ttl     = 86400
 }
 
 resource "hetznerdns_record" "caladan_aaaa" {

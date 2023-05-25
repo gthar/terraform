@@ -33,12 +33,18 @@ provider "vultr" {
 module "dns" {
   source = "./modules/dns"
 
+  #nameservers = [
+  #  "ns1.linode.com",
+  #  "ns2.linode.com",
+  #  "ns3.linode.com",
+  #  "ns4.linode.com",
+  #  "ns5.linode.com"
+  #]
+
   nameservers = [
-    "ns1.linode.com",
-    "ns2.linode.com",
-    "ns3.linode.com",
-    "ns4.linode.com",
-    "ns5.linode.com"
+    "hydrogen.ns.hetzner.com",
+    "oxygen.ns.hetzner.com",
+    "helium.ns.hetzner.de"
   ]
 
   domain = "monotremata.xyz"

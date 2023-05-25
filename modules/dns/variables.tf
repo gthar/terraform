@@ -24,3 +24,8 @@ variable "dkim_pub_key" {
   type        = string
   description = "dkim public key"
 }
+
+variable "nameservers" {
+  type = list(string)
+  description = "dns nameservers to use"
+}

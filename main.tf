@@ -13,6 +13,10 @@ terraform {
       source  = "vultr/vultr"
       version = "2.11.4"
     }
+    hetznerdns = {
+      source  = "timohirt/hetznerdns"
+      version = ">=2.2.0"
+    }
   }
 }
 
@@ -28,13 +32,21 @@ provider "vultr" {
 
 module "dns" {
   source = "./modules/dns"
+
+  nameservers = [
+    "ns1.linode.com",
+    "ns2.linode.com",
+    "ns3.linode.com",
+    "ns4.linode.com",
+    "ns5.linode.com"
+  ]
+
   domain = "monotremata.xyz"
 
   caladan = {
     ipv4 = "139.162.137.29"
     ipv6 = "2a01:7e01::f03c:92ff:fea2:5d7c"
     domains = toset([
-      "monotremata.xyz",
       "git",
       "gts",
       "kb",

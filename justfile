@@ -13,6 +13,7 @@ export LINODE_TOKEN := `pass linode.com/token`
 export VULTR_API_KEY := `pass vultr.com/api_key`
 export HTTP_PROXY := "caladan:8888"
 export HTTPS_PROXY := "caladan:8888"
+export HETZNER_DNS_API_TOKEN := `pass hetzner.com/tokens/terraform`
 
 init:
     terraform init -backend-config="conn_str=postgres://{{pg_user}}:{{passwd}}@{{pg_host}}:{{pg_port}}/{{pg_db}}"
@@ -24,3 +25,5 @@ plan *ARGS:
 apply *ARGS:
     terraform apply {{ARGS}}
 
+terraform *ARGS:
+    terraform {{ARGS}}

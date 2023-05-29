@@ -18,7 +18,6 @@ export HETZNER_DNS_API_TOKEN := `pass hetzner.com/tokens/terraform`
 init:
     terraform init -backend-config="conn_str=postgres://{{pg_user}}:{{passwd}}@{{pg_host}}:{{pg_port}}/{{pg_db}}"
 
-
 plan *ARGS:
     terraform plan {{ARGS}}
 

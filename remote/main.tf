@@ -31,7 +31,7 @@ provider "vultr" {
 }
 
 module "dns" {
-  source = "./modules/dns"
+  source = "../modules/dns"
 
   #nameservers = [
   #  "ns1.linode.com",
@@ -76,5 +76,5 @@ module "dns" {
 }
 
 module "vps" {
-  source = "./modules/vps"
+  source = "../modules/vps"
 }

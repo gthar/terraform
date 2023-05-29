@@ -56,7 +56,11 @@ psql --host pg.monotremata.xyz
 ```
 
 ```sql
-CREATE DATABASE terraform_backend;
 CREATE USER terraform WITH ENCRYPTED PASSWORD '****';
+
+CREATE DATABASE terraform_backend;
 GRANT ALL PRIVILEGES ON DATABASE terraform_backend TO terraform;
+
+CREATE DATABASE terraform_lan;
+GRANT ALL PRIVILEGES ON DATABASE terraform_lan TO terraform;
 ```

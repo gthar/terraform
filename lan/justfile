@@ -9,6 +9,7 @@ passwd := `pass pg.monotremata.xyz/terraform`
 # conn_str := f"postgres://{{pg_user}}:{{passwd}}@{{pg_host}}:{{pg_port}}/{{pg_db}}"
 
 export TF_VAR_hetzner_token := `pass hetzner.com/tokens/suricata`
+export TF_VAR_pg_passwd := `pass pg.monotremata.xyz/terraform`
 
 init:
     terraform init -backend-config="conn_str=postgres://{{pg_user}}:{{passwd}}@{{pg_host}}:{{pg_port}}/{{pg_db}}"

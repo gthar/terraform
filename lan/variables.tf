@@ -31,3 +31,9 @@ variable "dns_names" {
     "*.suricata.monotremata.xyz",
   ]
 }
+
+variable "pg_passwd" {
+  type        = string
+  sensitive   = true
+  description = "postgresql password"
+}

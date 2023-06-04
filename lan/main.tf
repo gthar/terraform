@@ -12,3 +12,11 @@ module "cert-manager" {
   dns_common_name = var.dns_common_name
   dns_names       = var.dns_names
 }
+
+module "postgresql" {
+  source   = "../modules/postgresql"
+  host     = "pg.monotremata.xyz"
+  password = var.pg_passwd
+  username = "terraform"
+  db_owner = "rilla"
+}

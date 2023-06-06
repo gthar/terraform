@@ -55,8 +55,8 @@ resource "hetznerdns_record" "mx" {
     }
     MX = {
       type  = "MX"
-      name  = var.domain,
-      value = format("0 mail.%s", var.domain) # handle MX priority 0
+      name  = "@",
+      value = "0 mail" # handle MX priority 0
     }
   }
 }
@@ -79,8 +79,8 @@ resource "hetznerdns_record" "mx2" {
     }
     MX = {
       type  = "MX"
-      name  = var.domain
-      value = format("5 mx2.%s", var.domain) # handle MX priority 5
+      name  = "@"
+      value = "5 mx2" # handle MX priority 5
     }
   }
 }

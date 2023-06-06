@@ -1,6 +1,6 @@
 pg_user := "terraform"
 # pg_host := "pg.monotremata.xyz"
-pg_host := "narwhal"
+pg_host := "pg.monotremata.xyz"
 pg_db := "terraform_backend"
 pg_port := "5432"
 

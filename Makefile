@@ -10,7 +10,6 @@ PG_PORT=5432
 PG_PASSWD=$(shell pass "$(PG_HOST)/$(PG_USER)")
 PG_CONN_STR=postgres://$(PG_USER):$(PG_PASSWD)@$(PG_HOST):$(PG_PORT)/$(PG_DB)
 
-NAMECHEAP_API_KEY=$(shell pass namecheap.com/api_key)
 LINODE_TOKEN=$(shell pass linode.com/token)
 VULTR_API_KEY=$(shell pass vultr.com/api_key)
 
@@ -20,7 +19,6 @@ HTTPS_PROXY=caladan:8888
 export HTTP_PROXY
 export HTTPS_PROXY
 
-export NAMECHEAP_API_KEY
 export LINODE_TOKEN
 export VULTR_API_KEY
 

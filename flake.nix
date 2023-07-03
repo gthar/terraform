@@ -17,6 +17,7 @@
             pkgs.just
             pkgs.postgresql
             pkgs.tfk8s
+            pkgs.minio-client
           ];
           buildInputs = [ ];
         };

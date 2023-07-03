@@ -1,18 +1,11 @@
-pg_user := "terraform"
-# pg_host := "pg.monotremata.xyz"
-pg_host := "narwhal"
-pg_db := "terraform_lan"
-pg_port := "5432"
-
-passwd := `pass pg.monotremata.xyz/terraform`
-# todo: I'll use this once string interpolation gets implenented in Just https://github.com/casey/just/issues/11
-# conn_str := f"postgres://{{pg_user}}:{{passwd}}@{{pg_host}}:{{pg_port}}/{{pg_db}}"
-
 export TF_VAR_hetzner_token := `pass hetzner.com/tokens/suricata`
 export TF_VAR_pg_passwd := `pass pg.monotremata.xyz/terraform`
 
+minio_access_key := `pass minio.monotremata.xyz/terraform/access_key`
+minio_secret_key := `pass minio.monotremata.xyz/terraform/secret_key`
+
 init:
-    terraform init -backend-config="conn_str=postgres://{{pg_user}}:{{passwd}}@{{pg_host}}:{{pg_port}}/{{pg_db}}"
+    terraform init -backend-config="access_key={{minio_access_key}}" -backend-config="secret_key={{minio_secret_key}}"
 
 plan *ARGS:
     terraform plan {{ARGS}}

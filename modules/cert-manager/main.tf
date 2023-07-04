@@ -11,16 +11,6 @@ terraform {
   }
 }
 
-provider "kubernetes" {
-  config_path = "~/.kube/config"
-}
-
-provider "helm" {
-  kubernetes {
-    config_path = "~/.kube/config"
-  }
-}
-
 resource "helm_release" "cert-manager" {
   name             = "cert-manager"
   chart            = "cert-manager"
@@ -55,40 +45,6 @@ resource "kubernetes_secret" "hetzner-token" {
     api-key = var.hetzner_token
   }
 }
-
-#resource "kubernetes_manifest" "clusterissuer_letsencrypt_staging" {
-#  manifest = {
-#    apiVersion = "cert-manager.io/v1"
-#    kind       = "ClusterIssuer"
-#    metadata = {
-#      name = "letsencrypt-staging"
-#    }
-#    spec = {
-#      acme = {
-#        email = var.email
-#        privateKeySecretRef = {
-#          name = "letsencrypt-staging-account-key"
-#        }
-#        server = var.letsencrypt_servers.staging
-#        solvers = [
-#          {
-#            dns01 = {
-#              webhook = {
-#                config = {
-#                  apiUrl     = var.hetzner_dns_api
-#                  secretName = kubernetes_secret.hetzner-token.metadata[0].name
-#                  zoneName   = var.zone_name
-#                }
-#                groupName  = var.group_name
-#                solverName = "hetzner"
-#              }
-#            }
-#          }
-#        ]
-#      }
-#    }
-#  }
-#}
 
 resource "kubernetes_manifest" "clusterissuer_letsencrypt" {
   manifest = {

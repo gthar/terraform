@@ -9,23 +9,51 @@ terraform {
     skip_metadata_api_check     = true
     skip_region_validation      = true
   }
+  required_providers {
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = ">= 2.20.0"
+    }
+    helm = {
+      source  = "hashicorp/helm"
+      version = ">= 2.9.0"
+    }
+    minio = {
+      source  = "aminueza/minio"
+      version = ">= 1.15.2"
+    }
+    linode = {
+      source  = "linode/linode"
+      version = ">= 1.29.0"
+    }
+    hetznerdns = {
+      source  = "timohirt/hetznerdns"
+      version = ">=2.2.0"
+    }
+    postgresql = {
+      source  = "cyrilgdn/postgresql"
+      version = ">= 1.19.0"
+    }
+  }
 }
 
-#module "cert-manager" {
-#  source          = "./modules/cert-manager"
-#  hetzner_token   = var.hetzner_token
-#  email           = var.email
-#  zone_name       = var.zone_name
-#  dns_common_name = var.dns_common_name
-#  dns_names       = var.dns_names
-#}
+provider "kubernetes" {
+  config_path = "~/.kube/config"
+}
 
-module "postgresql" {
-  source   = "./modules/postgresql"
-  host     = "pg.monotremata.xyz"
-  password = var.pg_passwd
+provider "helm" {
+  kubernetes {
+    config_path = "~/.kube/config"
+  }
+}
+
+provider "minio" {
+  minio_ssl = true
+}
+
+provider "postgresql" {
   username = "terraform"
-  db_owner = "rilla"
+  password = var.pg_passwd
 }
 
 module "dns" {
@@ -82,4 +110,8 @@ module "minio" {
 
 module "minio_buckets" {
   source = "./modules/minio_buckets"
+  providers = {
+    minio = minio
+  }
+  depends_on = [module.minio]
 }

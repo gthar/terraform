@@ -7,13 +7,6 @@ terraform {
   }
 }
 
-provider "postgresql" {
-  host     = var.host
-  port     = var.port
-  username = var.username
-  password = var.password
-}
-
 resource "postgresql_database" "terraform_backend_db" {
   name            = "terraform_backend"
   owner           = var.db_owner

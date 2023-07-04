@@ -7,10 +7,6 @@ terraform {
   }
 }
 
-provider "kubernetes" {
-  config_path = "~/.kube/config"
-}
-
 # terraform import module.minio.kubernetes_namespace.minio_namespace minio
 resource "kubernetes_namespace" "minio_namespace" {
   metadata {

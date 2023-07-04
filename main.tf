@@ -48,7 +48,9 @@ provider "helm" {
 }
 
 provider "minio" {
-  minio_ssl = true
+  minio_server = "minio.monotremata.xyz:443"
+  minio_user   = "terraform"
+  minio_ssl    = true
 }
 
 provider "postgresql" {

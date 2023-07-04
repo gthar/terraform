@@ -1,8 +1,8 @@
-variable "hetzner_token" {
-  type        = string
-  description = "hetzner dns token"
-  sensitive   = true
-}
+#variable "hetzner_token" {
+#  type        = string
+#  description = "hetzner dns token"
+#  sensitive   = true
+#}
 
 variable "email" {
   type        = string

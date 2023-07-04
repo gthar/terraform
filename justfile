@@ -1,4 +1,4 @@
-export TF_VAR_hetzner_token := `pass hetzner.com/tokens/suricata`
+# export TF_VAR_hetzner_token := `pass hetzner.com/tokens/suricata`
 export TF_VAR_pg_passwd := `pass pg.monotremata.xyz/terraform`
 export TF_VAR_minio_root_user := "rilla"
 export TF_VAR_minio_root_password := `pass minio.monotremata.xyz/rilla`

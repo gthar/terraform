@@ -11,3 +11,8 @@ resource "minio_s3_bucket" "state_terraform_s3" {
   bucket = "terraform"
   acl    = "private"
 }
+
+resource "minio_s3_bucket" "nextcloud_bucket" {
+  bucket = "nextcloud"
+  acl    = "private"
+}

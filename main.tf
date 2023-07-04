@@ -79,3 +79,7 @@ module "minio" {
   minio_console_url   = "minio-console.monotremata.xyz"
   minio_host_path     = "/mnt/k3s_volumes/minio"
 }
+
+module "minio_buckets" {
+  source = "./modules/minio_buckets"
+}

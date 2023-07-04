@@ -37,3 +37,15 @@ variable "pg_passwd" {
   sensitive   = true
   description = "postgresql password"
 }
+
+variable "minio_root_user" {
+  type        = string
+  description = "minio root username"
+  sensitive   = true
+}
+
+variable "minio_root_password" {
+  type        = string
+  description = "minio root password"
+  sensitive   = true
+}

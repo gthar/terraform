@@ -70,3 +70,12 @@ module "dns" {
 module "vps" {
   source = "./modules/vps"
 }
+
+module "minio" {
+  source              = "./modules/minio"
+  minio_root_user     = var.minio_root_user
+  minio_root_password = var.minio_root_password
+  minio_url           = "minio.monotremata.xyz"
+  minio_console_url   = "minio-console.monotremata.xyz"
+  minio_host_path     = "/mnt/k3s_volumes/minio"
+}

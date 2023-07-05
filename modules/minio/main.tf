@@ -15,29 +15,29 @@ resource "kubernetes_namespace" "minio_namespace" {
 }
 
 # terraform import module.minio.kubernetes_persistent_volume.minio-pv minio-pv
-resource "kubernetes_persistent_volume" "minio-pv" {
+resource "kubernetes_persistent_volume" "minio-storage-pv" {
   metadata {
-    name = "minio-pv"
+    name = "minio-storage-pv"
   }
   spec {
     capacity           = { storage = var.minio_storage_capacity }
     access_modes       = ["ReadWriteOnce"]
     storage_class_name = "local"
     persistent_volume_source {
-      host_path { path = var.minio_host_path }
+      host_path { path = format("%s/storage", var.minio_host_path) }
     }
   }
 }
 
 # terraform import module.minio.kubernetes_persistent_volume_claim.minio-pvc minio/minio-pvc
-resource "kubernetes_persistent_volume_claim" "minio-pvc" {
+resource "kubernetes_persistent_volume_claim" "minio-storage-pvc" {
   metadata {
-    name      = "minio-pvc"
+    name      = "minio-storage-pvc"
     namespace = kubernetes_namespace.minio_namespace.metadata[0].name
   }
   spec {
     storage_class_name = "local"
-    volume_name        = kubernetes_persistent_volume.minio-pv.metadata[0].name
+    volume_name        = kubernetes_persistent_volume.minio-storage-pv.metadata[0].name
     access_modes       = ["ReadWriteOnce"]
     resources {
       requests = { storage = var.minio_storage_capacity }
@@ -121,7 +121,7 @@ resource "kubernetes_deployment" "minio-deployment" {
         volume {
           name = "storage"
           persistent_volume_claim {
-            claim_name = kubernetes_persistent_volume_claim.minio-pvc.metadata[0].name
+            claim_name = kubernetes_persistent_volume_claim.minio-storage-pvc.metadata[0].name
           }
         }
         automount_service_account_token = false

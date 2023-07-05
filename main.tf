@@ -9,6 +9,7 @@ terraform {
     skip_metadata_api_check     = true
     skip_region_validation      = true
   }
+
   required_providers {
     kubernetes = {
       source  = "hashicorp/kubernetes"
@@ -102,12 +103,13 @@ module "vps" {
 }
 
 module "minio" {
-  source              = "./modules/minio"
-  minio_root_user     = var.minio_root_user
-  minio_root_password = var.minio_root_password
-  minio_url           = "minio.monotremata.xyz"
-  minio_console_url   = "minio-console.monotremata.xyz"
-  minio_host_path     = "/mnt/k3s_volumes/minio"
+  source                 = "./modules/minio"
+  minio_storage_capacity = "200Gi"
+  minio_root_user        = var.minio_root_user
+  minio_root_password    = var.minio_root_password
+  minio_url              = "minio.monotremata.xyz"
+  minio_console_url      = "minio-console.monotremata.xyz"
+  minio_host_path        = "/mnt/k3s_volumes/minio"
 }
 
 module "minio_buckets" {

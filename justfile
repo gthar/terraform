@@ -7,10 +7,11 @@ export VULTR_API_KEY := `pass vultr.com/api_key`
 export HETZNER_DNS_API_TOKEN := `pass hetzner.com/tokens/terraform`
 export MINIO_PASSWORD := `pass minio.monotremata.xyz/terraform`
 
-init:
+init *ARGS:
     terraform init \
         -backend-config="access_key=terraform" \
-        -backend-config="secret_key=$MINIO_PASSWORD"
+        -backend-config="secret_key=$MINIO_PASSWORD" \
+        {{ARGS}}
 
 plan *ARGS:
     terraform plan {{ARGS}}

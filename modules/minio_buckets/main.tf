@@ -7,7 +7,7 @@ terraform {
   }
 }
 
-resource "minio_s3_bucket" "state_terraform_s3" {
+resource "minio_s3_bucket" "terraform_bucket" {
   bucket = "terraform"
   acl    = "private"
 }
